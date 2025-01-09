@@ -23,4 +23,4 @@ if [ -e $ENV ]; then
     ENV=prod
 fi
 
-docker compose --env-file $ENV_FILE -f compose.base.yml -f compose.$ENV.yml $@
+docker compose --env-file $ENV_FILE -f docker.compose.yml $@
