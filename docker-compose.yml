@@ -1,18 +1,57 @@
 version: '3'
 services:
-  energy-householder:
-    hostname: energy-householder
+  backend:
+    hostname: backend
     pull_policy: always
-    image: ghcr.io/sanriodev/energy-householder:dev
+    image: ghcr.io/sanriodev/energy-housholder:dev
     volumes:
-      - .env:/home/node/.env.prod
+      - .env.prod:/home/node/.env.prod
     environment:
       NODE_ENV: prod
     ports:
       - 3000:3000
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.tls=true"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.entrypoints=websecure"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.rule=(Host(`$TRAEFIK_HOST_URL`)) && PathPrefix(`/api`)"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.tls=true"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.rule=(Host(`$TRAEFIK_HOST_URL`)) && PathPrefix(`/service/backend`)"
+      - "traefik.http.middlewares.$COMPOSE_PROJECT_NAME-backend-strip.stripprefixregex.regex=/service/backend"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.middlewares=$COMPOSE_PROJECT_NAME-backend-strip@docker"
+      - "traefik.http.services.$COMPOSE_PROJECT_NAME-backend.loadbalancer.server.port=3000"
+      - "traefik.http.services.$COMPOSE_PROJECT_NAME-backend-api.loadbalancer.server.port=3000"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.service=$COMPOSE_PROJECT_NAME-backend@docker"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.service=$COMPOSE_PROJECT_NAME-backend-api@docker"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.tls=true"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.entrypoints=websecure"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.rule=(Host(`$TRAEFIK_HOST_URL`)) && PathPrefix(`/wss`)"
+      - "traefik.http.middlewares.$COMPOSE_PROJECT_NAME-backend-wss-strip.stripprefixregex.regex=/wss"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.middlewares=$COMPOSE_PROJECT_NAME-backend-wss-strip@docker"
+      - "traefik.http.services.$COMPOSE_PROJECT_NAME-backend-wss.loadbalancer.server.port=1234"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.service=$COMPOSE_PROJECT_NAME-backend-wss@docker"
+    profiles:
+      - project_full
+      - backend
     networks:
       - mongo
+
+  frontend:
+    image: ghcr.io/sanriodev/energy-householder-angular:dev
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-frontend.tls=true"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-frontend.entrypoints=websecure"
+      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-frontend.rule=(Host(`$TRAEFIK_HOST_URL`))"
+      - "traefik.http.services.$COMPOSE_PROJECT_NAME-frontend.loadbalancer.server.port=80"
+    volumes: []
+    networks:
+      - backbone
+    profiles:
+      - project_full
+      - frontend
 
   mongo:
     image: mongo:6.0.3
@@ -42,7 +81,10 @@ services:
     restart: unless-stopped
     networks:
       - mongo
+    profiles:
+      - infra_full
+      - mongo
 
 networks:
   mongo:
-    name: mongo
+    name: $HOST_NET_MONGO
