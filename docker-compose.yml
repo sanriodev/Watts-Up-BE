@@ -12,40 +12,41 @@ services:
       - 3000:3000
     restart: unless-stopped
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.tls=true"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.entrypoints=websecure"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.rule=(Host(`$TRAEFIK_HOST_URL`)) && PathPrefix(`/api`)"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.tls=true"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.rule=(Host(`$TRAEFIK_HOST_URL`)) && PathPrefix(`/service/backend`)"
-      - "traefik.http.middlewares.$COMPOSE_PROJECT_NAME-backend-strip.stripprefixregex.regex=/service/backend"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.middlewares=$COMPOSE_PROJECT_NAME-backend-strip@docker"
-      - "traefik.http.services.$COMPOSE_PROJECT_NAME-backend.loadbalancer.server.port=3000"
-      - "traefik.http.services.$COMPOSE_PROJECT_NAME-backend-api.loadbalancer.server.port=3000"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.service=$COMPOSE_PROJECT_NAME-backend@docker"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.service=$COMPOSE_PROJECT_NAME-backend-api@docker"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.tls=true"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.entrypoints=websecure"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.rule=(Host(`$TRAEFIK_HOST_URL`)) && PathPrefix(`/wss`)"
-      - "traefik.http.middlewares.$COMPOSE_PROJECT_NAME-backend-wss-strip.stripprefixregex.regex=/wss"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.middlewares=$COMPOSE_PROJECT_NAME-backend-wss-strip@docker"
-      - "traefik.http.services.$COMPOSE_PROJECT_NAME-backend-wss.loadbalancer.server.port=1234"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.service=$COMPOSE_PROJECT_NAME-backend-wss@docker"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.tls=true'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.entrypoints=websecure'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.rule=(Host(`$TRAEFIK_HOST_URL`)) && PathPrefix(`/api`)'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.tls=true'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.rule=(Host(`$TRAEFIK_HOST_URL`)) && PathPrefix(`/service/backend`)'
+      - 'traefik.http.middlewares.$COMPOSE_PROJECT_NAME-backend-strip.stripprefixregex.regex=/service/backend'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.middlewares=$COMPOSE_PROJECT_NAME-backend-strip@docker'
+      - 'traefik.http.services.$COMPOSE_PROJECT_NAME-backend.loadbalancer.server.port=3000'
+      - 'traefik.http.services.$COMPOSE_PROJECT_NAME-backend-api.loadbalancer.server.port=3000'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend.service=$COMPOSE_PROJECT_NAME-backend@docker'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-api.service=$COMPOSE_PROJECT_NAME-backend-api@docker'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.tls=true'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.entrypoints=websecure'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.rule=(Host(`$TRAEFIK_HOST_URL`)) && PathPrefix(`/wss`)'
+      - 'traefik.http.middlewares.$COMPOSE_PROJECT_NAME-backend-wss-strip.stripprefixregex.regex=/wss'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.middlewares=$COMPOSE_PROJECT_NAME-backend-wss-strip@docker'
+      - 'traefik.http.services.$COMPOSE_PROJECT_NAME-backend-wss.loadbalancer.server.port=1234'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-backend-wss.service=$COMPOSE_PROJECT_NAME-backend-wss@docker'
     profiles:
       - project_full
       - backend
     networks:
       - mongo
+      - backbone
 
   frontend:
     image: ghcr.io/sanriodev/energy-householder-angular:dev
     restart: unless-stopped
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-frontend.tls=true"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-frontend.entrypoints=websecure"
-      - "traefik.http.routers.$COMPOSE_PROJECT_NAME-frontend.rule=(Host(`$TRAEFIK_HOST_URL`))"
-      - "traefik.http.services.$COMPOSE_PROJECT_NAME-frontend.loadbalancer.server.port=80"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-frontend.tls=true'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-frontend.entrypoints=websecure'
+      - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-frontend.rule=(Host(`$TRAEFIK_HOST_URL`))'
+      - 'traefik.http.services.$COMPOSE_PROJECT_NAME-frontend.loadbalancer.server.port=80'
     volumes: []
     networks:
       - backbone
@@ -88,3 +89,5 @@ services:
 networks:
   mongo:
     name: $HOST_NET_MONGO
+  backbone:
+    name: $HOST_NET_BACKBONE
