@@ -3,7 +3,7 @@ services:
   backend:
     hostname: backend
     pull_policy: always
-    image: ghcr.io/sanriodev/energy-housholder:dev
+    image: ghcr.io/sanriodev/energy-householder:dev
     volumes:
       - .env.prod:/home/node/.env.prod
     environment:
