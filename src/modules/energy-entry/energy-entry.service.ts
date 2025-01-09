@@ -77,16 +77,16 @@ export class EnergyEntryService {
   }
 
   @Cron('0 */15 * * * *')
-  private async saveNewCronData(): Promise<EnergyEntryDocument[]> {
+  async saveNewCronData(): Promise<EnergyEntryDocument[]> {
     const data = await this.modbusReaderService.getModbusData();
     const entries: EnergyEntryDocument[] = [];
-    for (const entry of data) {
+    for (const entry of data.data) {
       entries.push(
         await this.create({
-          batteryLevel: entry.readResult.data[0] * 100,
-          batteryPercent: entry.readResult.data[1] * 100 + '%',
-          batteryVoltage: entry.readResult.data[2] * 10 + ' V',
-          batteryStatus: entry.readResult.data[3]?.toString(),
+          batteryLevel: entry * 100,
+          batteryPercent: entry * 100 + '%',
+          batteryVoltage: entry * 10 + ' V',
+          batteryStatus: entry?.toString(),
         }),
       );
     }

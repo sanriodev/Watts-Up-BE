@@ -10,61 +10,38 @@ export class ModbusReaderService {
     this.client = new ModbusRTU();
   }
 
-  async getModbusData(): Promise<ModbusReadResult[]> {
+  async getModbusData(): Promise<ReadRegisterResult> {
     await this.connect();
-    const addresses: ModbusReadParams[] = [
-      {
-        register: 43000,
-        length: 1,
-        key: 'SOC', //state of charge
-      },
-      {
-        register: 40254,
-        length: 1,
-        key: 'voltage',
-      },
-      {
-        register: 4,
-        length: 2,
-        key: 'power',
-      },
-    ];
-    const res = await this.readHoldingRegisters(addresses);
+
+    const res = await this.readHoldingRegisters();
     await this.disconnect();
     return res;
   }
 
   private async connect(
-    port: string = '/dev/ttyUSB0',
-    baudRate: number = 9600,
+    ip: string = '192.168.188.67',
+    port: number = 5743,
   ): Promise<void> {
     try {
       // Open the serial port
-      await this.client.connectRTUBuffered(port, { baudRate });
+      await this.client.connectTcpRTUBuffered(ip, { port: port });
       // Set the slave ID (usually the address of the device)
-      this.client.setID(1);
-      // Set a timeout for the connection
-      this.client.setTimeout(1000);
       Logger.log('Connected to Modbus device');
+
+      this.client.setID(251);
+      // Set a timeout for the connection
+      Logger.log('set the device id');
     } catch (error) {
       Logger.error('Failed to connect to Modbus device', error);
     }
   }
 
-  private async readHoldingRegisters(
-    addresses: ModbusReadParams[],
-  ): Promise<ModbusReadResult[]> {
+  private async readHoldingRegisters(): Promise<ReadRegisterResult> {
     try {
-      let res: ModbusReadResult[] = [];
-      for (const address of addresses) {
-        res.push({
-          key: address.key,
-          readResult: await this.client.readHoldingRegisters(
-            address.register,
-            address.length,
-          ),
-        });
-      }
+      Logger.log('reading registers');
+
+      const res: any = await this.client.readHoldingRegisters(0, 1);
+      Logger.log('reading registers successful');
       return res;
     } catch (error) {
       Logger.error('Failed to read holding registers', error);
