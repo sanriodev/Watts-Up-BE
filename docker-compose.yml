@@ -5,7 +5,7 @@ services:
     pull_policy: always
     image: ghcr.io/watt-s-up/energy-householder:dev
     volumes:
-      - .env.prod:/home/node/.env.prod
+      - .env:/home/node/.env.prod
     environment:
       NODE_ENV: prod
     ports:
