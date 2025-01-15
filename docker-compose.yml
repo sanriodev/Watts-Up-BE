@@ -48,6 +48,8 @@ services:
       - 'traefik.http.routers.$COMPOSE_PROJECT_NAME-frontend.rule=(Host(`$TRAEFIK_HOST_URL`))'
       - 'traefik.http.services.$COMPOSE_PROJECT_NAME-frontend.loadbalancer.server.port=80'
     volumes: []
+    ports:
+      - 4200:4200
     networks:
       - backbone
     profiles:
