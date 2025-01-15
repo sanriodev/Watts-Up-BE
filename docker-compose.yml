@@ -3,7 +3,7 @@ services:
   backend:
     hostname: backend
     pull_policy: always
-    image: ghcr.io/sanriodev/energy-householder:dev
+    image: ghcr.io/watt-s-up/energy-householder:dev
     volumes:
       - .env.prod:/home/node/.env.prod
     environment:
@@ -39,7 +39,7 @@ services:
       - backbone
 
   frontend:
-    image: ghcr.io/sanriodev/energy-householder-angular:dev
+    image: ghcr.io/watt-s-up/energy-householder-angular:dev
     restart: unless-stopped
     labels:
       - 'traefik.enable=true'
