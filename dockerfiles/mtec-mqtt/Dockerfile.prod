@@ -1,9 +1,13 @@
-FROM python:3
+FROM python:3.14.0a4-alpine3.21
 
-WORKDIR /home/python/mtec-mqtt
+WORKDIR /home/python
 
-RUN pip install https://github.com/croedel/MTECmqtt/archive/refs/heads/main.zip
+RUN python -m venv . && source bin/activate
 
-COPY . .
+RUN pip install . https://github.com/croedel/MTECmqtt/archive/refs/heads/main.zip
 
-CMD [ "python", "mtec_mqtt" ]
+COPY ./config.yaml ./mtecmqtt/config.yaml
+
+ENV XDG_CONFIG_HOME /home/python
+
+CMD [ "mtec_mqtt" ]

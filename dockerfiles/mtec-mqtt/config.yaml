@@ -1,0 +1,32 @@
+---
+# M-TEC espressif MODBUS server
+MODBUS_IP : espressif           # IP address / hostname of "espressif" modbus server
+MODBUS_PORT : 5743              # Port for firmware < V27.52.4.0
+MODBUS_PORT2 : 502              # Port for firmware > V27.52.4.0
+MODBUS_SLAVE : 252              # Modbus slave id (usually no change required)
+MODBUS_TIMEOUT : 5              # Timeout for Modbus server (s)
+MODBUS_RETRIES : 3              # Retries
+MODBUS_FRAMER: rtu              # Modbus Framer (usually no change required; options: 'ascii', 'binary', 'rtu', 'socket', 'tls')
+
+# MQTT settings
+MQTT_DISABLE : False
+MQTT_SERVER : 172.18.0.2         # MQTT server 
+MQTT_PORT : 1883                # MQTT server port
+MQTT_LOGIN  : " "               # MQTT Login
+MQTT_PASSWORD : ""              # MQTT Password  
+MQTT_TOPIC : MTEC               # MQTT topic name  
+MQTT_FLOAT_FORMAT : "{:.3f}"    # Defines how to format float values
+
+# Refresh interval
+REFRESH_NOW     : 10            # Refresh "now" data every N seconds
+REFRESH_DAY     : 300           # Refresh "day" statistic every N seconds
+REFRESH_TOTAL   : 310           # Refresh "total" statistic every N seconds
+REFRESH_CONFIG  : 3605          # Refresh "config" data every N seconds
+
+# Home Assistent support
+HASS_ENABLE : False             # Enable home assistant
+HASS_BASE_TOPIC : homeassistant # Basis MQTT topic of home assistant
+HASS_BIRTH_GRACETIME : 15       # Give HASS some time to get ready after the birth message was received
+
+# General
+DEBUG : False                   # Set to True to get verbose debug messages
