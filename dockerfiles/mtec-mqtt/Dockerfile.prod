@@ -1,0 +1,9 @@
+FROM python:3
+
+WORKDIR /home/python/mtec-mqtt
+
+RUN pip install https://github.com/croedel/MTECmqtt/archive/refs/heads/main.zip
+
+COPY . .
+
+CMD [ "python", "mtec_mqtt" ]
