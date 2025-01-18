@@ -14,12 +14,12 @@ export class ModbusReaderService {
     await this.connect();
     const addresses: ModbusReadParams[] = [
       {
-        register: 43000,
+        register: 33000,
         length: 1,
         key: 'SOC', //state of charge
       },
       {
-        register: 40254,
+        register: 30254,
         length: 1,
         key: 'voltage',
       },
@@ -35,12 +35,12 @@ export class ModbusReaderService {
   }
 
   private async connect(
-    port: string = '/dev/ttyUSB0',
-    baudRate: number = 9600,
+    ip: string = 'espressif.fritz.box',
+    port: number = 502,
   ): Promise<void> {
     try {
       // Open the serial port
-      await this.client.connectRTUBuffered(port, { baudRate });
+      await this.client.connectTcpRTUBuffered(ip, { port });
       // Set the slave ID (usually the address of the device)
       this.client.setID(1);
       // Set a timeout for the connection
@@ -55,7 +55,7 @@ export class ModbusReaderService {
     addresses: ModbusReadParams[],
   ): Promise<ModbusReadResult[]> {
     try {
-      let res: ModbusReadResult[] = [];
+      const res: ModbusReadResult[] = [];
       for (const address of addresses) {
         res.push({
           key: address.key,
@@ -74,7 +74,7 @@ export class ModbusReaderService {
 
   private async disconnect(): Promise<void> {
     try {
-      await this.client.close(() => {});
+      await this.client.close(() => { });
       Logger.log('Disconnected from Modbus device');
     } catch (error) {
       Logger.error('Failed to disconnect from Modbus device', error);
