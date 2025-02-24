@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.0](https://github.com/Watt-s-Up/Watt-s-Up-/compare/v1.0.0...v1.1.0) (2025-02-21)
+
+
+### Features
+
+* compose ([25ed47f](https://github.com/Watt-s-Up/Watt-s-Up-/commit/25ed47fb5acf474d21890ee510c032ccc22718f3))
+* some new stuff ([532590c](https://github.com/Watt-s-Up/Watt-s-Up-/commit/532590c74f0a83925c260340663c2691b077a1d4))
+* vsc launch ([714fc0f](https://github.com/Watt-s-Up/Watt-s-Up-/commit/714fc0fd35fb6027dd01ac3db093611a9226fa30))
+
+
+### Bug Fixes
+
+* compose ([f186fd2](https://github.com/Watt-s-Up/Watt-s-Up-/commit/f186fd2eea6aeac3038c1034da34ce4c8697d264))
+* compose file ([953e425](https://github.com/Watt-s-Up/Watt-s-Up-/commit/953e4251c02344bf9ee67fa7f9d06c2d307211da))
+* image name ([1a32296](https://github.com/Watt-s-Up/Watt-s-Up-/commit/1a3229621a9995a422c8940fefdd6be9f9ef9a98))
+
 ## 1.0.0 (2024-09-15)
 
 
