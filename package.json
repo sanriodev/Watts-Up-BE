@@ -31,7 +31,7 @@
     "class-validator": "^0.14.1",
     "joi": "^17.13.3",
     "modbus-serial": "^8.0.17",
-    "mongoose": "^8.6.1",
+    "mongoose": "^8.13.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },
